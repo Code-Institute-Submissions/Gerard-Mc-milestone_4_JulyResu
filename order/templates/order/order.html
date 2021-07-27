@@ -2,9 +2,8 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid border-top">
-  {% if request.user.is_authenticated %}
-  <form class="form col-lg-4 offset-lg-4 button-style p-5 border-box shadow bg-white my-5"
+<div class="container-fluid my-0">
+  <form class="form col-lg-4 offset-lg-4 button-style p-5 border-box shadow bg-white my-4"
     action="{% url 'add_to_cart' %}" method="POST">
     <h1 class="h1-text-style mb-0 bold-font text-center">Order Form</h1>
     {% if order_page_elements_display == True %}
@@ -18,7 +17,7 @@
     {% csrf_token %}
     {% for input in form %}
     <div class="form-group">
-      <label class="d-block" for="{{ field.auto_id }}">{{ input.label }}</label>
+      <label class="d-block" for="{{ input.html_name }}">{{ input.label }}</label>
       <div class="form-check form-check-inline">
         {{ input }}
       </div>
@@ -30,19 +29,10 @@
     <br>
     <button type="submit" class="btn btn-primary mb-2 pink-bg border-none font">Add to Cart</button>
   </form>
-
-  {% else %}
-
-  <div class="height-60vh row d-flex justify-content-center align-items-center">
-    <p><a href="{% url 'account_login' %}">Login</a> or <a href="{% url 'account_signup' %}">register</a> to order a
-      product.</p>
-
-
-  </div>
-  {% endif %}
 </div>
 
 <script>
+  document.getElementsByClassName("form-check-input").value = null;
   var category = document.getElementById('category');
   var complexity = document.getElementById('complexity');
   var variations = document.getElementById('variations');
