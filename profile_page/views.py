@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
-
 from .models import UserProfile
 from .forms import UserProfileForm
 
@@ -21,8 +20,7 @@ def profile(request):
     template = 'profile_page/profile_page.html'
     context = {
         'form': form,
-        'orders': orders,
-        'on_profile_page': True
+        'orders': orders
     }
 
     return render(request, template, context)

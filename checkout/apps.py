@@ -6,7 +6,3 @@ class CheckoutConfig(AppConfig):
 
     def ready(self):
         import checkout.signals
-
-
-class CategoryAdmin(AppConfig):
-    name = 'category'
