@@ -4,7 +4,6 @@
 <html lang="en">
 
 <head>
-    <title>Graphics Divine</title>
     {% block meta %}
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="utf-8">
@@ -40,7 +39,7 @@
     {% block extra_js %}
     {% endblock %}
 
-    <title>Graphics Divine {% block extra_title %}{% endblock %}</title>
+    <title>Graphics Divine{% block extra_title %}{% endblock %}</title>
 </head>
 
 <body>
@@ -85,7 +84,6 @@
                                     $0.00
                                     {% endif %}
                                 </span>
-                                </u>
                                 </p>
                             </div>
                         </a>
@@ -95,12 +93,24 @@
         </div>
     </header>
     {% include 'includes/nav.html' %}
-
-
+    <div class="message-container">
     {% if messages %}
-    <div class="message-container"></div>
+   
+            {% for message in messages %}
+                {% with message.level as level %}
+                    {% if level == 40 %}
+                        {% include 'includes/toasts/toast_error.html' %}
+                    {% elif level == 30 %}
+                        {% include 'includes/toasts/toast_warning.html' %}
+                    {% elif level == 25 %}
+                        {% include 'includes/toasts/toast_success.html' %}
+                    {% else %}
+                        {% include 'includes/toasts/toast_info.html' %}
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
     {% endif %}
-
+</div>
     {% block page_header %}
     {% endblock %}
 
@@ -111,8 +121,5 @@
 
     {% block postloadjs %}
     {% endblock %}
-
-
 </body>
-
 </html>

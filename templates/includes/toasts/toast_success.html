@@ -1,0 +1,30 @@
+{% if order %}
+<div id="toast-id" class="toast rounded-0 border-top-0 py-0" data-autohide="false">
+    <div class="w-100 col-12 bg-white text-center mt-3 p-3 shadow bold-font font-size-larger font">
+        <h2 class="font mb-1 text-center">Thank You</h2>
+        <hr class="w-50">
+        {% else %}
+        <div id="toast-id" class="toast rounded-0 border-top-0 py-0 border-bottom-thin" data-autohide="true">
+            <div class="w-100 col-12 bg-white text-center m-0 p-1 color-pink font">
+                {% endif %}
+                <div class="arrow-up arrow-success py-0"></div>
+                <div class="w-100 toast-capper bg-success py-0"></div>
+                <div class="toast-header bg-white text-dark py-0">
+                </div>
+                <div class="toast-body bg-white">
+                    <div class="row">
+                        <div class="col">
+                            {{ message|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $(window).on("load", function () {
+                        $('#toast-id').toast({ delay: 3000 });
+                        $('#toast-id').toast('show');
+                    });
+
+                });
+            </script>
