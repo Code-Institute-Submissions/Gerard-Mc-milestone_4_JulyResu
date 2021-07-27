@@ -15,18 +15,43 @@ import json
 
 @require_POST
 def cache_checkout_data(request):
+    cart = request.session.get('cart', {})
+    cart_meta_data = {}
+    index = 0
+    for item in cart.items():
+        item_price = 0
+        category = get_object_or_404(Category, pk=int(item[1]["category"]))
+        item_price = category.price
+        item_price = item_price * Decimal(item[1]["complexity"])
+        item_price = item_price * Decimal(item[1]["variations"])
+        if item[1]["fast_delivery"] == "True":
+            item_price = item_price * Decimal(settings.FAST_DELIVERY_CHARGE)
+        item_price = str(round(item_price, 2))
+
+        category = item[1]["category"]
+        complexity = item[1]["complexity"]
+        variations = item[1]["variations"]
+        fast_delivery = item[1]["fast_delivery"]
+        price = str(item_price)
+        # Data must be small to avoid exceeding stripe metadata charactor limit
+        cart_meta_data[index] = f'{category}_{complexity}_' \
+            f'{variations}_{fast_delivery}_{price}'
+        index += 1
+        json_dump = json.dumps(cart_meta_data)
+        if len(json_dump) > 500:
+            cart_meta_data = {"Cart Data": "Too many characters"}
+            json_dump = json.dumps(cart_meta_data)
     try:
         pid = request.POST.get('client_secret').split('_secret')[0]
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe.PaymentIntent.modify(pid, metadata={
-            'cart': json.dumps(request.session.get('cart', {})),
+            'cart': json_dump,
             'save_info': request.POST.get('save_info'),
             'username': request.user,
         })
         return HttpResponse(status=200)
     except Exception as e:
-        messages.error(request, 'Sorry, your payment cannot be \
-            processed right now. Please try again later.')
+        messages.error(request, 'Your payment failed, please try again later.')
         return HttpResponse(content=e, status=400)
 
 
