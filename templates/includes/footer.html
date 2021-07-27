@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-lg-6 col-12 mb-1 d-flex justify-content-center">
                 <a href="{% url 'home' %}" class="nav-link nav-text-style float-left">
-                    <img id="img-mobile" class="mt-1 mb-2 col-4 mx-auto " src="{% static 'img/site-logo.png' %}"
+                    <img id="img-mobile-2" class="mt-1 mb-2 col-4 mx-auto " src="{% static 'img/site-logo.png' %}"
                         alt="Shop Logo">
                     <h2 class="h2-style px-2">GRAPHICS DIVINE</h2>
                 </a>
@@ -21,7 +21,7 @@
                         <a href="{% url 'order' %}" class="py-1 text-dark">Order</a>
                     </li>
                     <li>
-                        <a href="#" class="py-1 text-dark">Contact</a>
+                        <a href="{% url 'contact' %}" class="py-1 text-dark">Contact Us</a>
                     </li>
                 </ul>
             </div>
@@ -29,6 +29,6 @@
     </div>
     <div class="text-center p-1 white-bg lower-footer">
         © 2021 Copyright:
-        <a class="text-dark" href="#">Graphics Divine</a>
+        <a class="text-dark" href="mailto:info@graphicsdivine.com">Graphics Divine</a>
     </div>
-</footer>
+</footer> 

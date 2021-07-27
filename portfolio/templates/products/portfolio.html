@@ -66,11 +66,11 @@
           </div>
           {% endif %}
           <div class="modal" id="{{ product.name }}{{ product.id }}" role="dialog">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog font">
               <div class="modal-content">
                 <div class="modal-header">
                   <h4 class="modal-title">
-                    <strong>{{ product.friendly_name|title }}</strong>
+                    <strong class="text-muted">{{ product.friendly_name|title }}</strong>
                   </h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -82,7 +82,7 @@
                   {% endif %}
                   <br>
                   <br>
-                  <h5 class="modal-title">User Description</h5>
+                  <h5 class="modal-title"><strong>User Description</strong></h5>
                   <p>{{ product.user_description }}</p>
                   <p><strong>Price:</strong> {{ product.lineitem_total }}</p>
                   <div class="modal-footer p-0">

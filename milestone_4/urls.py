@@ -1,4 +1,4 @@
-"""boutique_ado URL Configuration
+"""Graphics Divine URL Configuration
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
 Examples:
@@ -28,9 +28,10 @@ urlpatterns = [
     path('profile_page/', include('profile_page.urls')),
     path('cart/', include('cart.urls')),
     path('checkout/', include('checkout.urls')),
+    path('contact/', include('contact.urls')),
     path('profile/', include('profile_page.urls')),
     path(
         "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-),
+        RedirectView.as_view(
+            url=staticfiles_storage.url("favicon.ico")),),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

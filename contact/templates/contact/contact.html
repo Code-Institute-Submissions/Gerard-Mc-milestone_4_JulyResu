@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-10 offset-1 bg-white p-5 button-style shadow font my-5 height-60vh">
+    <div class="container mb-0 pb-0 col-12 bg-white p-3 button-style">
+        <h1 class="font mb-3 text-center mb-5">Contact Us</h1>
+        <div class="container contact-form">
+            <form method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="form-group">
+                            <input type="text" name="user_name" class="form-control" placeholder="Your Name *" value=""
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="user_mail" class="form-control" placeholder="Your Email *"
+                                value="" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" name="user_phone" class="form-control"
+                                placeholder="Your Phone Number (Optional)" value="">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="form-group">
+                            <textarea name="user_text" class="form-control w-100" placeholder="Your Message *"
+                                style="height: 200px;" required></textarea>
+                        </div>
+                </div>
+                <div class="col-12 col-lg-8 offset-lg-2 mt-3">
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btn blue-bg w-100 color-white" value="Send">
+                </div>
+            </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
