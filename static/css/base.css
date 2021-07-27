@@ -450,10 +450,21 @@ footer .lower-footer{
 	font-family: 'Goldman', cursive!important;
 }
 
+.height-20vh{
+	min-height: 20vh;
+}
+
+.height-40vh{
+	min-height: 40vh;
+}
+
 .height-60vh{
 	min-height: 60vh;
 }
 
+.height-75vh{
+	min-height: 75vh;
+}
 .overflow{
 	overflow: auto;
 }
