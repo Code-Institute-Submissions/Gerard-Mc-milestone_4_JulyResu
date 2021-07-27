@@ -2,14 +2,13 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
 {% endblock %}
 
 {% block content %}
 <section class="container-fluid height-60vh">
-    <div class="container-fluid col-10 offset-1 bold-font">
-        <h1 class="text-left font mt-5 mb-5">Checkout</h1>
-    </div>
+
+    <h1 class="text-center font mt-5 mb-5">Checkout</h1>
     <div class="container-fluid col-10 offset-1 bg-white p-5 button-style shadow">
 
         <h3 class="">Items: {{ product_count }}</h3>
@@ -99,15 +98,15 @@
                                 </div>
                                 <div class="modal-body">
                                     <p><strong>Variations: </strong>
-                                            {% if item.variations == "1" %}
-                                            1
-                                            {% elif item.variations == "1.25" %}
-                                            2
-                                            {% elif item.variations == "1.5" %}
-                                            3
-                                            {% else %}
-                                            4
-                                            {% endif %}
+                                        {% if item.variations == "1" %}
+                                        1
+                                        {% elif item.variations == "1.25" %}
+                                        2
+                                        {% elif item.variations == "1.5" %}
+                                        3
+                                        {% else %}
+                                        4
+                                        {% endif %}
                                     </p>
                                     <p class="modal-title"><strong>Description</strong></p>
                                     <p>{{ item.user_description }}</p>
@@ -123,25 +122,25 @@
         <div class="col-12 col-lg-6 w-100 mb-0">
             <form action="{% url 'checkout' %}" method="POST" id="payment-form" class="font-2">
                 {% csrf_token %}
-                {% for input in OrderForm %}
+                {% for input in order_form %}
                 <div class="form-group w-100">
-                    <label class="d-block" for="{{ field.auto_id }}">{{ input.label }}</label>
-                    <div class="form-check form-check-inline w-100">
+                    <label class="d-block" for="{{ order_form.html_name }}">{{ input.label }}</label>
                         {{ input }}
-                    </div>
                 </div>
                 {% endfor %}
                 <div class="form-check form-check-inline mt-2 mb-3 border border-dark p-1 border-round px-3">
                     {% if user.is_authenticated %}
-								<label class="form-check-label" for="id-save-info">Save this delivery information to my profile</label>
-                                <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save-info" name="save-info" checked>
-							{% else %}
-								<label class="form-check-label" for="id-save-info">
-                                    <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or 
-                                    <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
-                                </label>
-							{% endif %}
-						</div>
+                    <label class="form-check-label" for="id-save-info">Save this delivery information to my
+                        profile</label>
+                    <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save-info" name="save-info"
+                        checked>
+                    {% else %}
+                    <label class="form-check-label" for="id-save-info">
+                        <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or
+                        <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
+                    </label>
+                    {% endif %}
+                </div>
                 <div class="grey-bg p-2 border-round shadow-less border border-dark color-black font">
                     <p class="mt-0 mb-0  bold-font">Items: {{ product_count }}</p>
                     <p class="mt-0 mb-0">Order Total: &euro;{{ total }}</p>
@@ -177,16 +176,16 @@
     </div>
 </section>
 <div id="loading-overlay">
-    <h1 class="text-light logo-font loading-spinner">
+    <h2 class="text-light logo-font loading-spinner">
         <span class="icon">
             <i class="fas fa-3x fa-sync-alt fa-spin"></i>
         </span>
-    </h1>
+    </h2>
 </div>
 {% endblock %}
 {% block postloadjs %}
-    {{ block.super }}
-    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
-    {{ client_secret|json_script:"id_client_secret" }}
-    <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
+{{ block.super }}
+{{ stripe_public_key|json_script:"id_stripe_public_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+<script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}
