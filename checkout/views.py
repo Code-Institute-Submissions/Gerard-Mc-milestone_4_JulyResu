@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, reverse, HttpResponse, get_object_or_404
+from django.shortcuts import (
+    render, redirect, reverse, HttpResponse, get_object_or_404)
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from .forms import OrderForm
@@ -6,6 +7,7 @@ from cart.contexts import cart_contents
 import stripe
 from django.conf import settings
 from checkout.models import Category
+from profile_page.models import UserProfile
 from .models import Order, OrderLineItem
 from decimal import Decimal
 import json
@@ -31,8 +33,13 @@ def cache_checkout_data(request):
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
+
     if request.method == 'POST':
         cart = request.session.get('cart', {})
+        if request.user.is_authenticated:
+            user_profile = get_object_or_404(UserProfile, user=request.user)
+        else:
+            user_profile = None
         form_data = {
             'full_name': request.POST['full_name'],
             'email': request.POST['email'],
@@ -46,64 +53,102 @@ def checkout(request):
         }
         order_form = OrderForm(form_data)
         if order_form.is_valid():
+            cart_items = {}
             order = order_form.save(commit=False)
+            for item in cart.items():
+                category = get_object_or_404(
+                    Category, pk=int(item[1]["category"]))
+                item_price = category.price
+                item_price = item_price * Decimal(item[1]["complexity"])
+                item_price = item_price * Decimal(item[1]["variations"])
+                if item[1]["fast_delivery"] == "True":
+                    item_price = item_price * Decimal(
+                        settings.FAST_DELIVERY_CHARGE)
+                item_price = round(float(item_price), 2)
+
+                id = item[0]
+                product = {
+                    "category": item[1]["category"],
+                    "complexity": item[1]["complexity"],
+                    "variations": item[1]["variations"],
+                    'user_description': item[1]["user_description"],
+                    'fast_delivery': item[1]["fast_delivery"],
+                    'price': str(item_price)}
+                cart_items[id] = product
+
             pid = request.POST.get('client_secret').split('_secret')[0]
             order.stripe_pid = pid
-            order.original_cart = json.dumps(cart)
+            order.original_cart = json.dumps(cart_items)
+            order.user_profile = user_profile
             order.save()
-            for item in cart.items():
-                item_price = 0
-                delivery = False
-                complexity = Decimal(item[1]["complexity"])
-                variations = Decimal(item[1]["variations"])
-                category = get_object_or_404(Category, pk=int(item[1]["category"]))
-                item_price = category.price
-                item_price = Decimal(item_price) * complexity
-                item_price = Decimal(item_price) * variations
-                if item[1]["fast_delivery"] == "True":
-                    delivery = True
-                    item_price = Decimal(item_price) * Decimal(settings.FAST_DELIVERY_CHARGE)
-                    item_price = Decimal(round(item_price, 2))
 
-                if id:
-                    order_line_item = OrderLineItem(
-                        order=order,
-                        category=category,
-                        complexity=item[1]["complexity"],
-                        variations=item[1]["variations"],
-                        user_description=item[1]["user_description"],
-                        fast_delivery=delivery,
-                        lineitem_total=Decimal(item_price),
-                        )
-                    order_line_item.save()
+            for item in cart_items.items():
+                order_line_item = OrderLineItem(
+                    order=order,
+                    category=category,
+                    complexity=item[1]["complexity"],
+                    variations=item[1]["variations"],
+                    user_description=item[1]["user_description"],
+                    fast_delivery=item[1]["fast_delivery"],
+                    lineitem_total=float(item[1]["price"])
+                )
+                order_line_item.save()
 
             request.session['save_info'] = 'save-info' in request.POST
-            return redirect(reverse('checkout_success', args=[order.order_number]))
+            return redirect(
+                reverse('checkout_success', args=[order.order_number]))
+
+        else:
+            messages.error(
+                request, 'There was an error with your form. ' /
+                'Please double check your information.')
 
     else:
         cart = request.session.get('cart', {})
         if not cart:
-            messages.error(request, "Your cart is empty.")
-            return redirect(reverse('order'))
+            messages.error(
+                request, "There's nothing in your cart at the moment")
+            return redirect(reverse('products'))
 
-    
         current_cart = cart_contents(request)
-        total = current_cart['total']
-        stripe_total = round(total * 100)
+        grand_total = current_cart['total']
+        stripe_total = round(grand_total * 100)
         stripe.api_key = stripe_secret_key
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
         )
-                
-        form = OrderForm()
-        template = 'checkout/checkout.html'
-        context = {
-            'OrderForm': OrderForm,
-            'stripe_public_key': stripe_public_key,
-            'client_secret': intent.client_secret,
 
-        }
+        if request.user.is_authenticated:
+            try:
+                profile = UserProfile.objects.get(user=request.user)
+                order_form = OrderForm(initial={
+                    'full_name': profile.user.get_full_name(),
+                    'email': profile.user.email,
+                    'phone_number': profile.default_phone_number,
+                    'country': profile.default_country,
+                    'postcode': profile.default_postcode,
+                    'town_or_city': profile.default_town_or_city,
+                    'street_address1': profile.default_street_address1,
+                    'street_address2': profile.default_street_address2,
+                    'county': profile.default_county,
+                })
+            except UserProfile.DoesNotExist:
+                order_form = OrderForm()
+        else:
+            order_form = OrderForm()
+
+    if not stripe_public_key:
+        messages.warning(
+            request, 'Stripe public key is missing. '
+            'Did you forget to set it in your environment?')
+
+    template = 'checkout/checkout.html'
+    context = {
+        'order_form': order_form,
+        'stripe_public_key': stripe_public_key,
+        'client_secret': intent.client_secret,
+    }
 
     return render(request, template, context)
 
@@ -127,4 +172,3 @@ def checkout_success(request, order_number):
     }
 
     return render(request, template, context)
-
