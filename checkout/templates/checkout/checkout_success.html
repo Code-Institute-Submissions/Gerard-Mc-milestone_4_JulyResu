@@ -4,12 +4,10 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
 {% endblock %}
-
 {% block content %}
 <div class="container-fluid col-10 offset-1 bg-white p-5 button-style shadow font my-5 height-60vh">
     {% if not request.user.is_authenticated %}
-    <div class="height-60vh row d-flex justify-content-center align-items-center">
-        <p><a href="{% url 'account_login' %}">Login</a> or <a href="{% url 'account_signup' %}">register</a> to save your billing details and view your order history.</p>
+        <p class="pl-3"><a href="{% url 'account_login' %}">Login</a> or <a href="{% url 'account_signup' %}">register</a> to save your billing details and view your order history.</p>
     {% endif %}
     <div class="container mb-0 pb-0 col-12 bg-white p-3 button-style">
         <h2 class="font mb-3">Order Details</h2>
