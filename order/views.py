@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from .forms import CustomProductForm
 
+
 def order(request):
     """ Returns the home page """
     form = CustomProductForm()

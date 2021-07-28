@@ -27,4 +27,4 @@ class OrderForm(forms.ModelForm):
 
         self.fields['full_name'].widget.attrs['autofocus'] = True
         for field in self.fields:
-            self.fields[field].widget.attrs['class'] = 'payment-form-inputs w-100'
+            self.fields[field].widget.attrs['class'] = 'w-100'

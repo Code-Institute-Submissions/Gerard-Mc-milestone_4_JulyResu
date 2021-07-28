@@ -14,7 +14,7 @@ class CustomProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['id'] = field
-            self.fields[field].widget.attrs['class'] = 'form-check-input w-100 mb-2'
+            self.fields[field].widget.attrs['class'] = 'form-check-input w-100'
             self.fields[field].widget.attrs['onclick'] = 'total()'
             self.fields['user_description'].widget.attrs['class'] = '' \
                 'form-check-input w-100'

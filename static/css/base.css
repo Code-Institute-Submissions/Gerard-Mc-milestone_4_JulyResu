@@ -631,3 +631,7 @@ footer .lower-footer {
 .allauth label {
 	display: block;
 }
+
+.form-check-input{
+	margin-bottom: 5px;
+}

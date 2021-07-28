@@ -139,7 +139,7 @@ The cart metadata and save_info variable were also incorporated into the Stripe 
 The line items have a "Display on Portfolio" field, that, when true, will enable them to be displayed on the portfolio page. This was tested and worked as expected.
 
 ### **Known Bugs**
-* The Boostrap Carourousel background images would not load from an externally or internally. Only inline would get the
+* The Boostrap Carourousel background images would not load from an externally or internally. They had to be included inline and with a direct link because the Django `{static 'image'} format was cousing a parsing error on validation.
 
 
 ## **Validation**
