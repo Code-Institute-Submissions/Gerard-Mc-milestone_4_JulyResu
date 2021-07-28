@@ -635,7 +635,3 @@ footer .lower-footer {
 .form-check-input{
 	margin-bottom: 5px;
 }
-
-.carousel-control-next, .carousel-control-prev {
-	display: none!important;
-}
