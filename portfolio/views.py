@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from checkout.models import OrderLineItem, Category
+from checkout.models import OrderLineItem
 
 
 def portfolio(request):
