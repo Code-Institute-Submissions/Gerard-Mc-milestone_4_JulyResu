@@ -46,7 +46,7 @@ The main font used throughout the site is [Goldman](https://fonts.google.com/spe
 
 The wireframes are just simple sketches of what the layout was to become.
 
-They can be found [here](readme/wireframes)
+They can be found [here](readme/wireframes).
 
 ### **Database**
 sqlite3  was used as the database during development and 
@@ -106,12 +106,9 @@ Registration was tested by registering with an email account, waiting for a conf
 ### **Password Reset**
 
 After the reset password link was clicked and details entered, the page was redirected to a page stating that a link had been sent to the inbox. The link directed the browser to the password reset page, and after the password was reset, the user account functioned normally. This was repeated several times and always worked.
-This didn't work with Outlook though. It seems to be blocking it because the emails always come through on Gmail. This is very strange because all the other emails like email verification and the post-purchase emails came through. 
-
-It could be achieved with debug turned on, and they always went to junk mail. My best guess is that something about debug being on makes them seem even more like junk, or even malicious, and therefore being blocked by Outlook rather than the issue being that the emails were not being sent by the backend. 
 
 ### **Confirm Email and Post Purchase Email**
-As mentioned above, after completing the necessary steps to trigger these emails, they always came through, even on Outlook. The link provided by the Confirm email worked and verified the account, which could be seen in the admin.
+After completing the necessary steps to trigger these emails, they always came through. The link provided by the Confirm email worked and verified the account, which could be seen in the admin.
 After the post-purchase email was delivered, I checked the events on Stripe and could see the purchase there too.
 
 ### **Forms**
@@ -133,22 +130,23 @@ All links and buttons on the site were checked to see if they behaved as expecte
 
 ### **Stripe Payments, save_info Variable,and Meta Data**
 After a Stripe payment was made, it was shown as a successful event in the Stripe Events section of the Stripe account used for this project. The user was then directed to the checkout_success page where the order was displayed, and a verified payment email was delivered. This order was then displayed on the user profile page. This worked dozens of times.
-The cart metadata and save_info variable were also incorporated into the Stripe metadata section in Stripe events. The billing info was saved to the user's profile when the variable was set to true by checking the checkbox on the checkout page.
+The cart metadata and save_info variable were also incorporated into the Stripe metadata section in Stripe events. The billing info was saved to the user's profile when the save_info variable was set to true by checking the checkbox on the checkout page.
 
 ### **Add Line-items to portfolio Page**
 The line items have a "Display on Portfolio" field, that, when true, will enable them to be displayed on the portfolio page. This was tested and worked as expected.
 
 ### **Known Bugs**
-* The Boostrap Carourousel background images would not load from an externally or internally. They had to be included inline and with a direct link because the Django `{static 'image'} format was cousing a parsing error on validation.
+* The Boostrap Carourousel background images would not load externally or internally. They had to be included inline and with a direct link because the Django `{static 'image'} format was causing a parsing error on validation.
 
 
 ## **Validation**
 Links to HTML, CSS, JavaScript, and Python validation text and image files are below. 
 
-[JavaScript](readme/jshint)
-[Python](readme/PEP8)
+* [JavaScript](readme/jshint)
+* [Python](readme/PEP8)
+
 The errors in HTML are template logic related.
-[HTML & CSS Validation](readme/html_css_validation)
+* [HTML & CSS Validation](readme/html_css_validation)
 
 All CSS, Python, Javascript, and HTML were validated.
 

@@ -1,0 +1,37 @@
+Check results
+=============
+
+
+
+Code
+=============
+from django import forms
+from checkout.models import OrderLineItem
+
+
+class CustomProductForm(forms.ModelForm):
+    class Meta:
+        model = OrderLineItem
+        fields = (
+            'category', 'complexity', 'variations', 'user_description',
+            'fast_delivery',)
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        self.fields['category'].widget.attrs['requiered'] = True
+        self.fields['user_description'].widget.attrs['placeholder'] = '' \
+            'Your product\'s description...'
+        self.fields['user_description'].widget.attrs['style'] = '' \
+            'max-height: 100px'
+        self.fields['category'].label = "Category"
+        self.fields['complexity'].label = "Complexity"
+        self.fields['variations'].label = "Variations"
+        self.fields['user_description'].label = "Description"
+        self.fields['fast_delivery'].label = "Fast Delivery +15%"
+        for field in self.fields:
+            self.fields[field].widget.attrs['id'] = field
+            self.fields[field].widget.attrs['class'] = 'form-check-input'
+            self.fields[field].widget.attrs['onclick'] = 'total()'
+            self.fields['user_description'].widget.attrs['class'] = '' \
+                'form-check-input w-100'
